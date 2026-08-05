@@ -1,0 +1,89 @@
+# ==========================
+# Python
+# ==========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+venv/
+env/
+.venv/
+resume_env/
+resume_env2/
+
+# ==========================
+# VS Code
+# ==========================
+.vscode/
+.idea/
+
+# ==========================
+# Environment Variables
+# ==========================
+.env
+.env.*
+
+# ==========================
+# Python Cache
+# ==========================
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# ==========================
+# Build
+# ==========================
+build/
+dist/
+*.egg-info/
+
+# ==========================
+# Logs
+# ==========================
+*.log
+
+# ==========================
+# SQLite Database
+# ==========================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==========================
+# ChromaDB
+# ==========================
+chroma/
+chroma_db/
+data/chroma/
+
+# ==========================
+# Uploaded Resumes
+# ==========================
+data/resumes/
+
+# ZIP uploads
+*.zip
+
+# ==========================
+# Reports
+# ==========================
+reports/
+exports/
+*.xlsx
+*.csv
+
+# ==========================
+# HuggingFace Cache
+# ==========================
+.huggingface/
+.cache/huggingface/
+
+# Sentence Transformers Cache
+sentence_transformers/
+
+# ==========================
+# OS Files
+# ==========================
+.DS_Store
+Thumbs.db

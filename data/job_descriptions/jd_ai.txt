@@ -1,0 +1,15 @@
+Job Title: AI Engineer
+
+Requirements:
+- Strong Python programming skills
+- Experience with FastAPI
+- Knowledge of LangChain and RAG
+- Experience with Vector Databases such as ChromaDB
+- Familiarity with LLMs
+- Good communication skills
+
+Responsibilities:
+- Build AI applications
+- Develop RAG pipelines
+- Integrate LLM APIs
+- Work with HR to improve resume screening
