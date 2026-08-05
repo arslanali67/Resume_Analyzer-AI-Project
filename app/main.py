@@ -48,14 +48,7 @@ def main():
 
         for rank, result in enumerate(results, start=1):
 
-            recommendation = result["evaluation"].hiring_recommendation
-
-            # Keep only the first sentence
-            recommendation = recommendation.split(".")[0]
-
-            # Limit length for table display
-            if len(recommendation) > 25:
-                recommendation = recommendation[:25] + "..."
+            recommendation = result["evaluation"].recommendation
 
             print(
                 f'{rank:<6}'
@@ -73,11 +66,16 @@ def main():
             print(f"Resume: {result['filename']}")
             print("=" * 80)
 
-            print(
-                result["evaluation"].model_dump_json(
-                    indent=4
-                )
-            )
+            evaluation = result["evaluation"]
+
+            print(f"Score: {evaluation.match_score}")
+            print(f"Recommendation: {evaluation.recommendation}")
+            print(f"Reason: {evaluation.recommendation_reason}")
+            print(f"Experience Summary: {evaluation.experience_summary}")
+            print(f"Matching Skills: {', '.join(evaluation.matching_skills)}")
+            print(f"Missing Skills: {', '.join(evaluation.missing_skills)}")
+            print(f"Strengths: {', '.join(evaluation.strengths)}")
+            print(f"Weaknesses: {', '.join(evaluation.weaknesses)}")
 
             print()
 

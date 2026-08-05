@@ -34,6 +34,7 @@ def save_evaluation(
             match_score,
 
             recommendation,
+            recommendation_reason,
 
             strengths,
             weaknesses,
@@ -43,7 +44,8 @@ def save_evaluation(
 
         )
 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+
         """,
         (
             filename,
@@ -59,7 +61,8 @@ def save_evaluation(
             metadata.experience_years,
 
             evaluation.match_score,
-            evaluation.hiring_recommendation,
+            evaluation.recommendation,
+            evaluation.recommendation_reason,
 
             json.dumps(evaluation.strengths),
             json.dumps(evaluation.weaknesses),
@@ -72,9 +75,7 @@ def save_evaluation(
     conn.commit()
     conn.close()
 
-
-
-
+    
 def get_all_evaluations():
     """
     Return all stored evaluation results.
@@ -108,6 +109,7 @@ def get_all_evaluations():
                 "experience_years": row["experience_years"],
                 "match_score": row["match_score"],
                 "recommendation": row["recommendation"],
+                "recommendation_reason": row["recommendation_reason"],
                 "strengths": json.loads(row["strengths"]),
                 "weaknesses": json.loads(row["weaknesses"]),
                 "matching_skills": json.loads(row["matching_skills"]),
@@ -181,17 +183,28 @@ def filter_evaluations(filters):
     # -----------------------------
     # Sorting
     # -----------------------------
-    query += " ORDER BY match_score DESC"
 
-    # -----------------------------
-    # Pagination
-    # -----------------------------
-    offset = (filters.page - 1) * filters.limit
+    allowed_columns = {
+        "match_score",
+        "experience_years",
+        "candidate_name",
+        "current_role",
+        "recommendation",
+    }
 
-    query += " LIMIT ? OFFSET ?"
+    sort_by = (
+        filters.sort_by
+        if filters.sort_by in allowed_columns
+        else "match_score"
+    )
 
-    params.append(filters.limit)
-    params.append(offset)
+    order = (
+        "ASC"
+        if filters.order.lower() == "asc"
+        else "DESC"
+    )
+
+    query += f" ORDER BY {sort_by} {order}"
 
     cursor = conn.execute(query, params)
 
@@ -216,10 +229,6 @@ def filter_evaluations(filters):
 
     evaluations = []
 
-
-
-
-        
     for row in rows:
 
         evaluation = {
@@ -233,6 +242,7 @@ def filter_evaluations(filters):
             "experience_years": row["experience_years"],
             "match_score": row["match_score"],
             "recommendation": row["recommendation"],
+            "recommendation_reason": row["recommendation_reason"],
             "strengths": json.loads(row["strengths"]),
             "weaknesses": json.loads(row["weaknesses"]),
             "matching_skills": json.loads(row["matching_skills"]),
@@ -267,10 +277,20 @@ def filter_evaluations(filters):
 
         evaluations.append(evaluation)
 
+    filtered_total = len(evaluations)
+
+    # -----------------------------
+    # Python Pagination
+    # -----------------------------
+    start = (filters.page - 1) * filters.limit
+    end = start + filters.limit
+
+    paginated_results = evaluations[start:end]
+
     return {
-        "total": total,
+        "total": filtered_total,
         "page": filters.page,
         "limit": filters.limit,
-        "total_pages": (total + filters.limit - 1) // filters.limit,
-        "results": evaluations,
+        "total_pages": (filtered_total + filters.limit - 1) // filters.limit,
+        "results": paginated_results,
     }

@@ -1,0 +1,78 @@
+About The Job
+
+Join our Team - Your career journey starts here – not just a job, but a future.
+
+Our Potential Opportunity 
+
+INTECH Automation Intelligence is seeking a skilled and solution-oriented Solution & Proposal Engineer to join our fast-paced Solution Centre Department. This role is central to designing, optimizing, and proposing control system solutions tailored to customer RFQs and technical requirements. You’ll be working on high-impact projects across industries like Oil & Gas, Utilities, and Energy — shaping automation outcomes that prioritize performance, safety, and cost-efficiency.
+
+What You’ll Lead And Deliver
+
+Manage daily proposal and presales activities, ensuring timely completion of assigned tasks and adherence to proposal submission deadlines.
+Review RFQs, client specifications, and tender documents to assess technical and commercial requirements, preparing Statement of Work (SOW) summaries for discussion with the Solution Center Lead and Sales team.
+Analyze customer requirements and develop comprehensive technical solutions aligned with client needs and project specifications.
+Prepare high-quality technical and commercial proposals, ensuring compliance with customer requirements, company standards, and submission timelines.
+Develop and recommend optimal control system architectures and automation solutions, obtaining necessary technical approvals from the Solution Center Lead.
+Prepare proposal support documentation, including Gantt charts, organizational charts, compliance matrices, reference lists, success stories, OEM authorizations, engineer certifications, customer appreciation letters, and other value-added documents to improve bid competitiveness.
+Complete solution-specific checklists for Control Systems, Wellhead Control Panels (WHCP), Electrical Panels, Metering Skids, Buildings, and other associated systems to ensure complete solution coverage.
+Coordinate with internal stakeholders, vendors, OEMs, and subcontractors to obtain competitive quotations and negotiate pricing, commercial terms, and discount structures.
+Prepare detailed project cost estimates, commercial evaluations, and pricing models while maintaining profitability and competitiveness.
+Maintain and continuously update the Master Proposal Database, proposal templates, costing sheets, and standard solution libraries in coordination with the Solution Center Lead.
+Develop standardized proposal formats, solution architectures, costing methodologies, and documentation templates to improve consistency, quality, and efficiency across all proposals.
+Perform comprehensive quality reviews of proposals and supporting documents to ensure technical accuracy, completeness, and compliance before submission.
+Identify technical, commercial, contractual, and execution risks within RFQs and tender specifications, escalating concerns and documenting all assumptions and exceptions to the Solution Center Lead.
+Ensure all proposals clearly define technical and commercial deviations, assumptions, qualifications, and exceptions wherever applicable.
+Gather feedback from Regional Sales Managers (RSMs) on submitted proposals and incorporate lessons learned to enhance future proposal quality and win rates.
+Provide technical support during prequalification (PQ) activities and customer registration processes for new clients.
+Conduct customer site visits whenever required to understand project scope, perform technical assessments, and support solution development.
+Ensure strict confidentiality of vendor pricing, customer information, bid strategies, commercial data, and project documentation in accordance with company policies.
+Support continuous process improvement by developing efficient proposal workflows, calculation tools, reusable templates, and standardized documentation.
+Collaborate closely with Sales, Engineering, Procurement, and Management teams to deliver high-quality, customer-focused solutions.
+Assist management in fostering a collaborative, high-performance work environment by promoting knowledge sharing, process improvements, and continuous team development.
+
+Requirements:
+
+To Be Successful in This Role, You Must Have:
+
+Bachelor’s/Master’s degree in Engineering (Electrical/Electronics) with 3 - 5 years of experience.
+Understanding of Control systems and applications.
+Practical knowledge in developing control system solutions and architectures.
+Experience in creating BOM and designs at least two major PLC and DCS platforms and HMI/ SCADA software’s (Rockwell, HIMA, Siemens, DELAT V, Yokogawa, GE, Honeywell, etc.)
+Good understanding of control system hardware design (Panel design/ wiring drawings etc.).
+Understanding of Oil and gas standards and their implementation. (NFPA, FM, UL, CE Marks, API, IEC standards)
+Understanding of Hazardous areas applications and equipment selection
+Understanding of electrical equipment and LV switchgears.
+Knowledge on control system networks and protocols (communication layers, soft protocols MODBUS, DEVICENET, ETHERNET/IP, Profibus, ProfiNet etc.)
+Know how of oil and gas facilities (upstream/ mid-stream and downstream).
+Know-how of communication systems (VSATs, Radio networks)
+Understanding of Safety instrumented systems and SIL levels
+Knowledge of security systems (CCTVs, Anti-Intrusion systems) etc.
+MS office expertise (Excel/ Word/ PP/Visio)
+Complete understanding of product/ services portfolio of Oil & Gas automation industry.
+Complete Understanding of cost model related to supply and engineering services.
+
+We Offer Competitive Benefits:
+
+Global Exposure: Opportunities to work on international projects and collaborate with global teams. 
+Competitive Compensation: A salary package that recognizes your expertise and contributions. 
+Annual Bonus: Performance-driven rewards based on your gross pay to celebrate your achievements and contributions. 
+Site Allowance: Dollarized Site Allowance provided as per company policy to support your field assignments and on-site requirements 
+In-House Lunch: Delicious meals provided during work hours to keep you fueled and focused. 
+Health Insurance: OPD coverage for you and your parents, plus IPD coverage for you and your dependents. 
+Learning Opportunities: Access to training programs, workshops, and certifications to enhance your skills. 
+Work-Life Balance: Paid time off, including annual leave and holidays. 
+Inclusive Environment: A workplace that celebrates diversity and fosters collaboration. 
+
+ Why Join INTECH Automation Intelligence?
+
+At INTECH, you will have the opportunity to work with a globally renowned industrial automation and digitalization technology company. For nearly 30 years, INTECH has partnered with major oil and gas global giants to deliver innovative solutions. As we continue to lead in the Industry 4.0 era, you will be at the forefront of transformative technologies that solve real-world challenges.
+
+What to Expect After Applying?
+
+Explore how INTECH’s Talent Acquisition team ensures a seamless hiring journey. From embracing talent with a passion for innovation to fostering a culture of continuous learning and growth, we’re dedicated to finding and supporting the best minds in the industry.
+
+Click Here to learn more about our hiring process and discover your path to success with us.
+
+Our hiring process is designed to assess your skills and potential in a fair and inclusive manner. After applying, you will be guided through a structured evaluation process to ensure mutual alignment.
+
+INTECH Automation Intelligence is an equal opportunity employer committed to fostering an inclusive hiring environment where qualified individuals with disabilities are encouraged to apply.

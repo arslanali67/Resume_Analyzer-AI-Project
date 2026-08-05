@@ -20,3 +20,6 @@ class EvaluationFilter(BaseModel):
 
     matching_skill: str | None = None
     missing_skill: str | None = None
+
+    sort_by: str = "match_score"
+    order: str = "desc"

@@ -202,13 +202,15 @@ def export_to_excel(results):
         ranking_sheet.cell(row=row, column=2).value = metadata.candidate_name
         ranking_sheet.cell(row=row, column=3).value = result["filename"]
         ranking_sheet.cell(row=row, column=4).value = evaluation.match_score
-        ranking_sheet.cell(row=row, column=5).value = evaluation.hiring_recommendation
-        ranking_sheet.cell(row=row, column=6).value = metadata.experience_years
-        ranking_sheet.cell(row=row, column=7).value = metadata.current_role
-        ranking_sheet.cell(row=row, column=8).value = metadata.email
-        ranking_sheet.cell(row=row, column=9).value = metadata.phone
-        ranking_sheet.cell(row=row, column=10).value = metadata.location
+        ranking_sheet.cell(row=row, column=5).value = evaluation.recommendation
+        ranking_sheet.cell(row=row, column=6).value = evaluation.recommendation_reason
+        ranking_sheet.cell(row=row, column=7).value = metadata.experience_years
+        ranking_sheet.cell(row=row, column=8).value = metadata.current_role
+        ranking_sheet.cell(row=row, column=9).value = metadata.email
+        ranking_sheet.cell(row=row, column=10).value = metadata.phone
+        ranking_sheet.cell(row=row, column=11).value = metadata.location
 
+        
         # --------------------------
         # Detailed Evaluation
         # --------------------------
@@ -216,25 +218,34 @@ def export_to_excel(results):
         detail_sheet.cell(row=row, column=1).value = metadata.candidate_name
         detail_sheet.cell(row=row, column=2).value = result["filename"]
         detail_sheet.cell(row=row, column=3).value = evaluation.match_score
+
         detail_sheet.cell(row=row, column=4).value = ", ".join(
             evaluation.matching_skills
         )
+
         detail_sheet.cell(row=row, column=5).value = ", ".join(
             evaluation.missing_skills
         )
+
         detail_sheet.cell(row=row, column=6).value = ", ".join(
             evaluation.strengths
         )
+
         detail_sheet.cell(row=row, column=7).value = ", ".join(
             evaluation.weaknesses
         )
+
         detail_sheet.cell(row=row, column=8).value = (
             evaluation.experience_summary
         )
+
         detail_sheet.cell(row=row, column=9).value = (
-            evaluation.hiring_recommendation
+            evaluation.recommendation
         )
 
+        detail_sheet.cell(row=row, column=10).value = (
+            evaluation.recommendation_reason
+        )
         # --------------------------
         # Candidate Metadata
         # --------------------------

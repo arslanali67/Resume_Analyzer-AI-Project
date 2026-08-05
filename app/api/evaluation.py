@@ -14,6 +14,10 @@ from app.schemas.evaluation_filter import EvaluationFilter
 from app.services.evaluation_database import (
     filter_evaluations,
 )
+from app.services.job_description_service import (
+    get_job_description_text,
+)
+from app.services.candidate_service import get_candidate_by_filename
 
 
 
@@ -30,11 +34,21 @@ router = APIRouter(
 @router.post("/")
 def evaluate_all(request: EvaluationRequest):
 
+    job_description = get_job_description_text(
+        request.job_id
+    )
+
+    if job_description is None:
+
+        return {
+            "error": "Job Description not found."
+        }
+
     resume_folder = "data/resumes"
 
     results = evaluate_all_resumes(
         folder_path=resume_folder,
-        job_description=request.job_description,
+        job_description=job_description,
     )
 
     export_to_excel(results)
@@ -52,6 +66,7 @@ def evaluate_all(request: EvaluationRequest):
         )
 
     return {
+        "job_id": request.job_id,
         "total_candidates": len(response),
         "results": response,
     }
@@ -91,6 +106,10 @@ def get_results(
 
     missing_skill: str | None = Query(None),
 
+    sort_by: str = Query("match_score"),
+
+    order: str = Query("desc"),
+
 ):
 
     filters = EvaluationFilter(
@@ -118,6 +137,10 @@ def get_results(
         matching_skill=matching_skill,
 
         missing_skill=missing_skill,
+
+        sort_by=sort_by,
+
+        order=order,
     )
 
     return filter_evaluations(filters)
@@ -133,29 +156,29 @@ def evaluate_single(
     request: EvaluationRequest,
 ):
 
-    file_path = Path("data/resumes") / filename
+    metadata = get_candidate_by_filename(filename)
 
-    if not file_path.exists():
+    if metadata is None:
+
         return {
             "error": "Candidate not found."
         }
 
-    # Read resume
-    text = read_document(file_path)
+    job_description = get_job_description_text(
+        request.job_id
+    )
 
-    # Clean text
-    text = clean_text(text)
+    if job_description is None:
 
-    # Extract metadata
-    metadata = extract_metadata(text)
+        return {
+            "error": "Job Description not found."
+        }
 
-    # Evaluate
     evaluation = evaluate_resume(
-        job_description=request.job_description,
+        job_description=job_description,
         filename=filename,
     )
 
-    # Save to SQLite
     save_evaluation(
         filename,
         metadata,
@@ -164,6 +187,7 @@ def evaluate_single(
 
     return {
         "filename": filename,
-        "metadata": metadata.model_dump(),
+        "job_id": request.job_id,
+        "metadata": metadata,
         "evaluation": evaluation.model_dump(),
     }

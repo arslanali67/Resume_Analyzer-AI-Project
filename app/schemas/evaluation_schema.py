@@ -17,4 +17,10 @@ class ResumeEvaluation(BaseModel):
 
     weaknesses: list[str]
 
-    hiring_recommendation: str
+    recommendation: str = Field(
+        description="Must be exactly one of: Hire, Maybe, Reject"
+    )
+
+    recommendation_reason: str = Field(
+        description="Short explanation for the recommendation."
+    )

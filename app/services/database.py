@@ -11,7 +11,12 @@ def get_connection():
 
 
 def initialize_database():
+
     conn = get_connection()
+
+    # ==========================================
+    # Evaluations Table
+    # ==========================================
 
     conn.execute("""
     CREATE TABLE IF NOT EXISTS evaluations (
@@ -31,12 +36,33 @@ def initialize_database():
         match_score INTEGER,
 
         recommendation TEXT,
+        recommendation_reason TEXT,
 
         strengths TEXT,
         weaknesses TEXT,
 
         matching_skills TEXT,
         missing_skills TEXT
+
+    )
+    """)
+
+    # ==========================================
+    # Job Descriptions Table
+    # ==========================================
+
+    conn.execute("""
+    CREATE TABLE IF NOT EXISTS job_descriptions (
+
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+        title TEXT NOT NULL,
+
+        department TEXT,
+
+        description TEXT NOT NULL,
+
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
     )
     """)

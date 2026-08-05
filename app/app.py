@@ -1,10 +1,17 @@
 from fastapi import FastAPI
 from app.services.database import initialize_database
 # Routers
+from app.api.dashboard import (
+    router as dashboard_router,
+)
+from app.api.comparison import (
+    router as comparison_router,
+)
 from app.api.routes import router
 from app.api.upload import router as upload_router
 from app.api.evaluation import router as evaluation_router
 from app.api.candidates import router as candidates_router
+from app.api.job_description import router as job_router
 from app.api import reports
 
 
@@ -56,5 +63,11 @@ app.include_router(candidates_router)
 # -------------------------------
 # Reports APIs
 # -------------------------------
+
+app.include_router(dashboard_router)
+
+app.include_router(comparison_router)
+
+app.include_router(job_router)
 
 app.include_router(reports.router)
