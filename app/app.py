@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.services.database import initialize_database
+from fastapi.middleware.cors import CORSMiddleware
 # Routers
 from app.api.dashboard import (
     router as dashboard_router,
@@ -35,6 +36,14 @@ Features:
 )
 
 initialize_database()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # -------------------------------
 # Basic Routes
