@@ -35,6 +35,16 @@ class ResumeMetadata(BaseModel):
         description="Candidate location"
     )
 
+    linkedin: str = Field(
+        default="",
+        description="Candidate LinkedIn profile link or username if available"
+    )
+
+    github: str = Field(
+        default="",
+        description="Candidate GitHub or portfolio profile link if available"
+    )
+
     summary: str = Field(
         description="Short professional summary in one sentence"
     )

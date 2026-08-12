@@ -18,7 +18,7 @@ from app.services.job_description_service import (
     get_job_description_text,
 )
 from app.services.candidate_service import get_candidate_by_filename
-
+from app.services.job_service import generate_job_id
 
 
 router = APIRouter(
@@ -46,9 +46,12 @@ def evaluate_all(request: EvaluationRequest):
 
     resume_folder = "data/resumes"
 
+    job_id=request.job_id
+    
     results = evaluate_all_resumes(
         folder_path=resume_folder,
         job_description=job_description,
+        job_id=request.job_id,
     )
 
     export_to_excel(results)
@@ -180,9 +183,10 @@ def evaluate_single(
     )
 
     save_evaluation(
-        filename,
-        metadata,
-        evaluation,
+        job_id=request.job_id,
+        filename=filename,
+        metadata=metadata,
+        evaluation=evaluation,
     )
 
     return {
