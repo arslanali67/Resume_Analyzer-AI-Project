@@ -2,26 +2,61 @@ from app.services.hybrid_search import hybrid_search
 from app.chains.evaluation_chain import evaluation_chain
 
 
-def evaluate_resume(job_description, filename, k=3):
+def evaluate_resume(
+    job_description: str,
+    filename: str | None = None,
+    resume_text: str | None = None,
+):
     """
-    Retrieve relevant resume chunks and evaluate them
-    against the job description.
+    Evaluate a resume against a job description.
+
+    HR Mode:
+        - Uses Hybrid Search (filename)
+
+    Candidate Portal Mode:
+        - Uses uploaded resume text directly
     """
 
-    # Retrieve relevant resume chunks using Hybrid Search
-    print("1. Starting hybrid search...")
-    documents = hybrid_search(
-    job_description,
-    filename,
-    )       
+    # ---------------------------------
+    # Candidate Portal
+    # ---------------------------------
+    if resume_text is not None:
 
-    print(f"2. Retrieved {len(documents)} documents")
+        print("1. Using uploaded resume...")
 
-    context = "\n\n".join(doc.page_content for doc in documents)
+        context = resume_text
+
+    # ---------------------------------
+    # HR Portal
+    # ---------------------------------
+    else:
+
+        print("1. Starting hybrid search...")
+
+        documents = hybrid_search(
+            job_description=job_description,
+            filename=filename,
+        )
+
+        if not documents:
+            print("No matching resume chunks found.")
+            return None
+
+        print(f"2. Retrieved {len(documents)} documents")
+
+        context = "\n\n".join(
+            doc.page_content
+            for doc in documents
+        )
+
+    # ---------------------------------
+    # Call LLM
+    # ---------------------------------
 
     print("3. Calling LLM...")
 
     try:
+
         result = evaluation_chain.invoke(
             {
                 "resume": context,
@@ -30,6 +65,7 @@ def evaluate_resume(job_description, filename, k=3):
         )
 
     except Exception as e:
+
         print(f"LLM Error: {e}")
         return None
 
