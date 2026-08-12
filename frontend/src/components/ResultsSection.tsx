@@ -24,6 +24,8 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
   const [currentRole, setCurrentRole] = useState("");
   const [matchingSkill, setMatchingSkill] = useState("");
   const [missingSkill, setMissingSkill] = useState("");
+  const [sortBy, setSortBy] = useState("match_score");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   const loadResults = useCallback(
     async (
@@ -37,6 +39,8 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
         current_role?: string;
         matching_skill?: string;
         missing_skill?: string;
+        sort_by?: string;
+        order?: string;
       }
     ) => {
       const f = filters ?? {
@@ -48,6 +52,8 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
         current_role: currentRole,
         matching_skill: matchingSkill,
         missing_skill: missingSkill,
+        sort_by: sortBy,
+        order: sortOrder,
       };
 
       setLoading(true);
@@ -67,11 +73,10 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
           current_role: f.current_role || undefined,
           matching_skill: f.matching_skill || undefined,
           missing_skill: f.missing_skill || undefined,
+          sort_by: f.sort_by || undefined,
+          order: f.order || undefined,
         });
-        const sorted = [...data.results].sort(
-          (a, b) => (b.match_score ?? 0) - (a.match_score ?? 0)
-        );
-        setResults(sorted);
+        setResults(data.results);
         setPage(data.page);
         setTotalPages(data.total_pages || 1);
         setTotal(data.total);
@@ -90,6 +95,8 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
       currentRole,
       matchingSkill,
       missingSkill,
+      sortBy,
+      sortOrder,
     ]
   );
 
@@ -112,6 +119,8 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
     setCurrentRole("");
     setMatchingSkill("");
     setMissingSkill("");
+    setSortBy("match_score");
+    setSortOrder("desc");
     void loadResults(1, {
       match_score_min: "",
       match_score_max: "",
@@ -121,6 +130,8 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
       current_role: "",
       matching_skill: "",
       missing_skill: "",
+      sort_by: "match_score",
+      order: "desc",
     });
   }
 
@@ -196,6 +207,23 @@ export default function ResultsSection({ refreshKey }: ResultsSectionProps) {
           placeholder="Missing skill"
           className="rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
         />
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+        >
+          <option value="match_score">Sort by score</option>
+          <option value="experience_years">Sort by experience</option>
+          <option value="candidate_name">Sort by name</option>
+        </select>
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="rounded-xl border border-slate-300 px-3 py-2 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+        >
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
         <div className="flex gap-2">
           <button
             type="submit"

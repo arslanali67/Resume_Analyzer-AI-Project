@@ -9,6 +9,11 @@ import type {
   EvaluateOneResponse,
   UploadResult,
   ZipUploadResponse,
+  JobDescription,
+  JobDescriptionCreate,
+  JobsResponse,
+  DashboardStats,
+  CompareResponse,
 } from "../types";
 
 const api = axios.create({
@@ -34,11 +39,15 @@ export function getErrorMessage(error: unknown): string {
     if (Array.isArray(detail)) {
       return detail.map((d) => d.msg || JSON.stringify(d)).join(", ");
     }
+    const errMsg = error.response?.data?.error;
+    if (typeof errMsg === "string") return errMsg;
     return error.message;
   }
   if (error instanceof Error) return error.message;
   return "Something went wrong";
 }
+
+// ── Upload ──────────────────────────────────────────────
 
 export async function uploadResume(file: File): Promise<UploadResult> {
   const form = new FormData();
@@ -54,22 +63,61 @@ export async function uploadZip(file: File): Promise<ZipUploadResponse> {
   return data;
 }
 
+// ── Job Descriptions ────────────────────────────────────
+
+export async function getJobs(): Promise<JobsResponse> {
+  const { data } = await api.get<JobsResponse>("/jobs/");
+  return data;
+}
+
+export async function getJob(jobId: number): Promise<JobDescription> {
+  const { data } = await api.get<JobDescription>(`/jobs/${jobId}`);
+  return data;
+}
+
+export async function createJob(
+  job: JobDescriptionCreate
+): Promise<{ message: string; job_id: number }> {
+  const { data } = await api.post<{ message: string; job_id: number }>(
+    "/jobs/",
+    job
+  );
+  return data;
+}
+
+export async function updateJob(
+  jobId: number,
+  job: JobDescriptionCreate
+): Promise<{ message: string }> {
+  const { data } = await api.put<{ message: string }>(`/jobs/${jobId}`, job);
+  return data;
+}
+
+export async function deleteJob(
+  jobId: number
+): Promise<{ message: string }> {
+  const { data } = await api.delete<{ message: string }>(`/jobs/${jobId}`);
+  return data;
+}
+
+// ── Evaluation ──────────────────────────────────────────
+
 export async function evaluateAll(
-  jobDescription: string
+  jobId: number
 ): Promise<EvaluateAllResponse> {
   const { data } = await api.post<EvaluateAllResponse>("/evaluate/", {
-    job_description: jobDescription,
+    job_id: jobId,
   });
   return data;
 }
 
 export async function evaluateOne(
   filename: string,
-  jobDescription: string
+  jobId: number
 ): Promise<EvaluateOneResponse> {
   const { data } = await api.post<EvaluateOneResponse>(
     `/evaluate/${encodeURIComponent(filename)}`,
-    { job_description: jobDescription }
+    { job_id: jobId }
   );
   return data;
 }
@@ -83,6 +131,8 @@ export async function getEvaluationResults(
   );
   return data;
 }
+
+// ── Candidates ──────────────────────────────────────────
 
 export async function getCandidates(
   filters: CandidateFilters = {}
@@ -111,6 +161,27 @@ export async function deleteCandidate(
   );
   return data;
 }
+
+// ── Dashboard ───────────────────────────────────────────
+
+export async function getDashboard(): Promise<DashboardStats> {
+  const { data } = await api.get<DashboardStats>("/dashboard/");
+  return data;
+}
+
+// ── Comparison ──────────────────────────────────────────
+
+export async function compareCandidates(
+  filename1: string,
+  filename2: string
+): Promise<CompareResponse> {
+  const { data } = await api.get<CompareResponse>("/compare/", {
+    params: { filename1, filename2 },
+  });
+  return data;
+}
+
+// ── Reports ─────────────────────────────────────────────
 
 export async function downloadReport(): Promise<Blob> {
   const { data } = await api.get<Blob>("/reports/evaluation", {

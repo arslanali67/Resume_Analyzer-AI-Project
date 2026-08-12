@@ -5,11 +5,13 @@ import {
   evaluateOne,
   getCandidates,
   getErrorMessage,
+  getJobs,
 } from "../api/client";
-import type { Candidate, EvaluateItem } from "../types";
+import type { Candidate, EvaluateItem, JobDescription } from "../types";
 
 interface EvaluateSectionProps {
   refreshKey: number;
+  jobsRefreshKey: number;
   onEvaluated: () => void;
 }
 
@@ -106,9 +108,11 @@ function ResultCard({ item }: { item: EvaluateItem }) {
 
 export default function EvaluateSection({
   refreshKey,
+  jobsRefreshKey,
   onEvaluated,
 }: EvaluateSectionProps) {
-  const [jobDescription, setJobDescription] = useState("");
+  const [jobs, setJobs] = useState<JobDescription[]>([]);
+  const [selectedJobId, setSelectedJobId] = useState<number | "">("");
   const [selectedFilename, setSelectedFilename] = useState("");
   const [loadingAll, setLoadingAll] = useState(false);
   const [loadingOne, setLoadingOne] = useState(false);
@@ -116,19 +120,31 @@ export default function EvaluateSection({
   const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
+    void getJobs()
+      .then((data) => setJobs(data.results))
+      .catch(() => setJobs([]));
+  }, [jobsRefreshKey]);
+
+  useEffect(() => {
     void getCandidates({ page: 1, limit: 100 })
       .then((data) => setCandidates(data.results))
       .catch(() => setCandidates([]));
   }, [refreshKey]);
 
+  const selectedJob = jobs.find((j) => j.id === selectedJobId);
+
   async function handleEvaluateAll() {
-    if (!jobDescription.trim()) {
-      toast.error("Please enter a job description.");
+    if (!selectedJobId) {
+      toast.error("Please select a job description.");
       return;
     }
     setLoadingAll(true);
     try {
-      const data = await evaluateAll(jobDescription.trim());
+      const data = await evaluateAll(selectedJobId);
+      if (data.error) {
+        toast.error(data.error);
+        return;
+      }
       setResults(data.results);
       toast.success(`Evaluated ${data.total_candidates} candidate(s).`);
       onEvaluated();
@@ -140,8 +156,8 @@ export default function EvaluateSection({
   }
 
   async function handleEvaluateOne() {
-    if (!jobDescription.trim()) {
-      toast.error("Please enter a job description.");
+    if (!selectedJobId) {
+      toast.error("Please select a job description.");
       return;
     }
     if (!selectedFilename) {
@@ -150,7 +166,7 @@ export default function EvaluateSection({
     }
     setLoadingOne(true);
     try {
-      const data = await evaluateOne(selectedFilename, jobDescription.trim());
+      const data = await evaluateOne(selectedFilename, selectedJobId);
       if (data.error) {
         toast.error(data.error);
         return;
@@ -171,60 +187,96 @@ export default function EvaluateSection({
     <section id="evaluate" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-slate-900">Evaluate Resumes</h2>
       <p className="mt-1 text-sm text-slate-500">
-        Paste a job description, then evaluate all resumes or a single candidate.
-        Evaluating all can take several minutes.
+        Select a saved job description, then evaluate all resumes or a single
+        candidate. Evaluating all can take several minutes.
       </p>
 
-      <label className="mt-5 block">
-        <span className="text-sm font-medium text-slate-700">Job description</span>
-        <textarea
-          value={jobDescription}
-          onChange={(e) => setJobDescription(e.target.value)}
-          rows={8}
-          placeholder="Paste the full job description here..."
-          className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-900 shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-        />
-      </label>
-
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
-        <button
-          type="button"
-          disabled={busy}
-          onClick={handleEvaluateAll}
-          className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loadingAll ? "Evaluating all..." : "Evaluate All"}
-        </button>
-
-        <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-end">
-          <label className="flex-1">
+      {jobs.length === 0 ? (
+        <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          No job descriptions found.{" "}
+          <a href="#jobs" className="font-medium underline">
+            Create a job description
+          </a>{" "}
+          first before running evaluations.
+        </div>
+      ) : (
+        <>
+          <label className="mt-5 block">
             <span className="text-sm font-medium text-slate-700">
-              Or evaluate one
+              Job description
             </span>
             <select
-              value={selectedFilename}
-              onChange={(e) => setSelectedFilename(e.target.value)}
+              value={selectedJobId}
+              onChange={(e) =>
+                setSelectedJobId(
+                  e.target.value ? Number(e.target.value) : ""
+                )
+              }
               disabled={busy}
               className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
             >
-              <option value="">Select candidate...</option>
-              {candidates.map((c) => (
-                <option key={c.filename} value={c.filename}>
-                  {c.candidate_name || c.filename} ({c.filename})
+              <option value="">Select a job...</option>
+              {jobs.map((job) => (
+                <option key={job.id} value={job.id}>
+                  {job.title}
+                  {job.department ? ` (${job.department})` : ""}
                 </option>
               ))}
             </select>
           </label>
-          <button
-            type="button"
-            disabled={busy}
-            onClick={handleEvaluateOne}
-            className="rounded-xl border border-indigo-300 bg-indigo-50 px-4 py-2.5 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loadingOne ? "Evaluating..." : "Evaluate Selected"}
-          </button>
-        </div>
-      </div>
+
+          {selectedJob && (
+            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
+              <p className="text-xs font-semibold uppercase text-slate-500">
+                Preview
+              </p>
+              <p className="mt-1 max-h-32 overflow-y-auto whitespace-pre-wrap text-sm text-slate-700">
+                {selectedJob.description}
+              </p>
+            </div>
+          )}
+
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+            <button
+              type="button"
+              disabled={busy || !selectedJobId}
+              onClick={handleEvaluateAll}
+              className="rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loadingAll ? "Evaluating all..." : "Evaluate All"}
+            </button>
+
+            <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-end">
+              <label className="flex-1">
+                <span className="text-sm font-medium text-slate-700">
+                  Or evaluate one
+                </span>
+                <select
+                  value={selectedFilename}
+                  onChange={(e) => setSelectedFilename(e.target.value)}
+                  disabled={busy}
+                  className="mt-1 w-full rounded-xl border border-slate-300 px-3 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
+                >
+                  <option value="">Select candidate...</option>
+                  {candidates.map((c) => (
+                    <option key={c.filename} value={c.filename}>
+                      {c.candidate_name || c.filename} ({c.filename})
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <button
+                type="button"
+                disabled={busy || !selectedJobId}
+                onClick={handleEvaluateOne}
+                className="rounded-xl border border-indigo-300 bg-indigo-50 px-4 py-2.5 text-sm font-medium text-indigo-700 transition hover:bg-indigo-100 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loadingOne ? "Evaluating..." : "Evaluate Selected"}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       {busy && (
         <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">

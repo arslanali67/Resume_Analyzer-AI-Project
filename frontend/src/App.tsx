@@ -1,15 +1,16 @@
 import { useCallback, useState } from "react";
 import { Toaster } from "react-hot-toast";
-import Layout from "./components/Layout";
-import UploadSection from "./components/UploadSection";
-import EvaluateSection from "./components/EvaluateSection";
-import CandidatesSection from "./components/CandidatesSection";
-import ResultsSection from "./components/ResultsSection";
-import ReportsSection from "./components/ReportsSection";
+import LandingPage from "./components/landing/LandingPage";
+import DashboardPage from "./components/DashboardPage";
+
+type View = "landing" | "dashboard";
 
 export default function App() {
+  const [view, setView] = useState<View>("landing");
   const [candidatesRefreshKey, setCandidatesRefreshKey] = useState(0);
   const [resultsRefreshKey, setResultsRefreshKey] = useState(0);
+  const [jobsRefreshKey, setJobsRefreshKey] = useState(0);
+  const [dashboardRefreshKey, setDashboardRefreshKey] = useState(0);
 
   const bumpCandidates = useCallback(() => {
     setCandidatesRefreshKey((k) => k + 1);
@@ -17,30 +18,53 @@ export default function App() {
 
   const bumpResults = useCallback(() => {
     setResultsRefreshKey((k) => k + 1);
+    setDashboardRefreshKey((k) => k + 1);
+  }, []);
+
+  const bumpJobs = useCallback(() => {
+    setJobsRefreshKey((k) => k + 1);
+  }, []);
+
+  const openDashboard = useCallback(() => {
+    setView("dashboard");
+    window.scrollTo(0, 0);
+  }, []);
+
+  const goHome = useCallback(() => {
+    setView("landing");
+    window.scrollTo(0, 0);
   }, []);
 
   return (
     <>
-      <Toaster position="top-right" />
-      <Layout>
-        <UploadSection onUploaded={bumpCandidates} />
-        <EvaluateSection
-          refreshKey={candidatesRefreshKey}
-          onEvaluated={() => {
-            bumpResults();
-            bumpCandidates();
-          }}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            fontFamily: "Inter, system-ui, sans-serif",
+            fontSize: "14px",
+          },
+        }}
+      />
+      {view === "landing" ? (
+        <LandingPage
+          onOpenDashboard={openDashboard}
+          onAnalyzed={bumpResults}
         />
-        <CandidatesSection
-          refreshKey={candidatesRefreshKey}
-          onDeleted={() => {
-            bumpCandidates();
-            bumpResults();
+      ) : (
+        <DashboardPage
+          refreshKeys={{
+            candidates: candidatesRefreshKey,
+            results: resultsRefreshKey,
+            jobs: jobsRefreshKey,
+            dashboard: dashboardRefreshKey,
           }}
+          onBackHome={goHome}
+          bumpCandidates={bumpCandidates}
+          bumpResults={bumpResults}
+          bumpJobs={bumpJobs}
         />
-        <ResultsSection refreshKey={resultsRefreshKey} />
-        <ReportsSection />
-      </Layout>
+      )}
     </>
   );
 }
