@@ -76,10 +76,25 @@ export default function UploadSection({ onUploaded }: UploadSectionProps) {
 
   return (
     <section id="upload" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-900">Upload Resumes</h2>
-      <p className="mt-1 text-sm text-slate-500">
-        Upload PDF/DOCX files individually, or a ZIP containing multiple resumes.
-      </p>
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold text-slate-900">Candidate Resume Manager</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Upload new resumes or re-upload the same file to update an existing candidate profile.
+          </p>
+        </div>
+        <span className="rounded-full bg-indigo-100 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-indigo-700">
+          Upload or Update
+        </span>
+      </div>
+
+      <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-600">
+        <div className="flex flex-wrap gap-2">
+          <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-800">New resume</span>
+          <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-800">Same file = update</span>
+          <span className="rounded-full bg-slate-200 px-2 py-1 text-xs font-medium text-slate-700">Duplicate is flagged</span>
+        </div>
+      </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <label className="flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center transition hover:border-indigo-400 hover:bg-indigo-50">

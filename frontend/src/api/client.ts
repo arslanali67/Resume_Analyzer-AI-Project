@@ -14,6 +14,7 @@ import type {
   JobsResponse,
   DashboardStats,
   CompareResponse,
+  CandidatePortalResponse,
 } from "../types";
 
 const api = axios.create({
@@ -169,6 +170,11 @@ export async function getDashboard(): Promise<DashboardStats> {
   return data;
 }
 
+export async function getHealth(): Promise<{ status: string }> {
+  const { data } = await api.get<{ status: string }>("/health");
+  return data;
+}
+
 // ── Comparison ──────────────────────────────────────────
 
 export async function compareCandidates(
@@ -188,4 +194,67 @@ export async function downloadReport(): Promise<Blob> {
     responseType: "blob",
   });
   return data;
+}
+
+// ── Candidate Portal ─────────────────────────────────────
+
+export async function analyzeCandidateResume(
+  file: File,
+  jobDescription: string
+): Promise<CandidatePortalResponse> {
+  const form = new FormData();
+  form.append("resume", file);
+  form.append("job_description", jobDescription);
+
+  const { data } = await api.post<CandidatePortalResponse>(
+    "/candidate/analyze",
+    form,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
+  return data;
+}
+
+export async function generateCandidateResumePdf(
+  file: File,
+  jobDescription: string
+): Promise<CandidatePortalResponse> {
+  const form = new FormData();
+  form.append("resume", file);
+  form.append("job_description", jobDescription);
+
+  const { data } = await api.post<CandidatePortalResponse>(
+    "/candidate/generate-pdf",
+    form,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
+  return data;
+}
+
+export async function rewriteCandidateResume(
+  file: File,
+  jobDescription: string
+): Promise<Record<string, unknown>> {
+  const form = new FormData();
+  form.append("resume", file);
+  form.append("job_description", jobDescription);
+
+  const { data } = await api.post<Record<string, unknown>>(
+    "/candidate/rewrite",
+    form,
+    {
+      headers: { "Content-Type": "multipart/form-data" },
+    }
+  );
+
+  return data;
+}
+
+export function getCandidateDownloadUrl(filename: string): string {
+  return `${api.defaults.baseURL ?? "http://127.0.0.1:8000"}/candidate/download/${encodeURIComponent(filename)}`;
 }
