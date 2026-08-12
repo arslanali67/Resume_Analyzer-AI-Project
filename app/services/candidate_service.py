@@ -49,24 +49,55 @@ def get_all_candidates():
 
     return list(candidates.values())
 
+from app.services.database import get_connection
+
+
 def get_candidate_by_filename(filename):
     """
-    Return metadata for a single candidate.
+    Return candidate information from the SQLite database
+    using the uploaded resume filename.
     """
 
-    vector_store = get_vector_store()
+    conn = get_connection()
 
-    data = vector_store.get(
-        where={
-            "filename": filename
-        },
-        include=["metadatas"],
-    )
+    try:
+        cursor = conn.execute(
+            """
+            SELECT
+                candidate_id,
+                filename,
+                candidate_name,
+                email,
+                phone,
+                location,
+                education,
+                current_role,
+                experience_years
+            FROM candidates
+            WHERE filename = ?
+            """,
+            (filename,),
+        )
 
-    if not data["metadatas"]:
-        return None
+        row = cursor.fetchone()
 
-    return data["metadatas"][0]
+        if row is None:
+            return None
+
+        return {
+            "candidate_id": row[0],
+            "filename": row[1],
+            "candidate_name": row[2],
+            "email": row[3],
+            "phone": row[4],
+            "location": row[5],
+            "education": row[6],
+            "current_role": row[7],
+            "experience_years": row[8],
+        }
+
+    finally:
+        conn.close()
 
 
 

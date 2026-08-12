@@ -149,6 +149,40 @@ export interface ZipUploadResponse {
   results: UploadResult[];
 }
 
+export interface CandidatePortalMetadata {
+  candidate_name?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  education?: string;
+  current_role?: string;
+  experience_years?: number;
+  skills?: string[];
+  [key: string]: unknown;
+}
+
+export interface CandidatePortalEvaluation {
+  match_score?: number;
+  matching_skills?: string[];
+  missing_skills?: string[];
+  strengths?: string[];
+  weaknesses?: string[];
+  overall_feedback?: string[];
+  [key: string]: unknown;
+}
+
+export interface CandidatePortalPdf {
+  filename: string;
+  download_url: string;
+}
+
+export interface CandidatePortalResponse {
+  metadata: CandidatePortalMetadata;
+  evaluation: CandidatePortalEvaluation;
+  rewritten_resume: Record<string, unknown> | string | null;
+  pdf: CandidatePortalPdf;
+}
+
 export interface TopSkill {
   skill: string;
   count: number;

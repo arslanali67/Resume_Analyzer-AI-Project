@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getDashboard, getErrorMessage } from "../api/client";
+import { getDashboard, getErrorMessage, getHealth } from "../api/client";
 import type { DashboardStats } from "../types";
 
 interface DashboardSectionProps {
@@ -64,14 +64,17 @@ export default function DashboardSection({
 }: DashboardSectionProps) {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(false);
+  const [apiHealth, setApiHealth] = useState<string>("checking");
 
   const loadDashboard = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await getDashboard();
+      const [data, health] = await Promise.all([getDashboard(), getHealth()]);
       setStats(data);
+      setApiHealth(health.status);
     } catch (error) {
       toast.error(getErrorMessage(error));
+      setApiHealth("unavailable");
     } finally {
       setLoading(false);
     }
@@ -124,14 +127,31 @@ export default function DashboardSection({
             {stats.total_candidates === 1 ? "" : "s"}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => void loadDashboard()}
-          disabled={loading}
-          className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-60"
-        >
-          {loading ? "Refreshing..." : "Refresh"}
-        </button>
+        <div className="flex items-center gap-2">
+          <span
+            className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+              apiHealth === "healthy"
+                ? "bg-emerald-100 text-emerald-700"
+                : apiHealth === "unavailable"
+                  ? "bg-rose-100 text-rose-700"
+                  : "bg-amber-100 text-amber-700"
+            }`}
+          >
+            {apiHealth === "healthy"
+              ? "Backend healthy"
+              : apiHealth === "unavailable"
+                ? "Backend offline"
+                : "Checking backend..."}
+          </span>
+          <button
+            type="button"
+            onClick={() => void loadDashboard()}
+            disabled={loading}
+            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+          >
+            {loading ? "Refreshing..." : "Refresh"}
+          </button>
+        </div>
       </div>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
