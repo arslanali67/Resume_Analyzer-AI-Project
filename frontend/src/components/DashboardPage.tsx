@@ -7,7 +7,6 @@ import CandidatesSection from "./CandidatesSection";
 import ResultsSection from "./ResultsSection";
 import CompareSection from "./CompareSection";
 import ReportsSection from "./ReportsSection";
-import CandidatePortalSection from "./CandidatePortalSection";
 
 interface DashboardPageProps {
   refreshKeys: {
@@ -42,7 +41,6 @@ export default function DashboardPage({
           bumpCandidates();
         }}
       />
-      <CandidatePortalSection />
       <CandidatesSection
         refreshKey={refreshKeys.candidates}
         onDeleted={() => {

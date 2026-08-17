@@ -1,28 +1,28 @@
-interface LandingNavbarProps {
-  onOpenDashboard: () => void;
-  onOpenCandidatePortal: () => void;
+interface CandidateNavbarProps {
+  onBackToHr: () => void;
 }
 
 const navLinks = [
-  { href: "#features", label: "Features" },
   { href: "#how-it-works", label: "How It Works" },
-  { href: "#benefits", label: "Benefits" },
-  { href: "#analyzer", label: "Analyze Resume" },
+  { href: "#features", label: "What You Get" },
+  { href: "#faq", label: "FAQ" },
 ];
 
-export default function LandingNavbar({
-  onOpenDashboard,
-  onOpenCandidatePortal,
-}: LandingNavbarProps) {
+export default function CandidateNavbar({ onBackToHr }: CandidateNavbarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-[#E6E6E2] bg-[#F8F8F6]/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
-        <a href="#" className="flex items-center gap-2.5">
+        <a href="#top" className="flex items-center gap-2.5">
           <span className="flex h-8 w-8 items-center justify-center rounded-md bg-[#176B5B] text-xs font-semibold text-white">
             RA
           </span>
-          <span className="text-[15px] font-semibold tracking-tight text-[#171717]">
-            AI Resume Analyzer
+          <span className="flex flex-col leading-none">
+            <span className="text-[15px] font-semibold tracking-tight text-[#171717]">
+              AI Resume Analyzer
+            </span>
+            <span className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-[#176B5B]">
+              Candidate Portal
+            </span>
           </span>
         </a>
 
@@ -41,23 +41,16 @@ export default function LandingNavbar({
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={onOpenCandidatePortal}
-            className="hidden rounded-md px-3 py-2 text-[14px] font-medium text-[#6B6B6B] transition hover:text-[#171717] md:inline-flex"
-          >
-            For Candidates
-          </button>
-          <button
-            type="button"
-            onClick={onOpenDashboard}
+            onClick={onBackToHr}
             className="hidden rounded-md px-3 py-2 text-[14px] font-medium text-[#6B6B6B] transition hover:text-[#171717] sm:inline-flex"
           >
-            Open Dashboard
+            For HR Teams
           </button>
           <a
             href="#analyzer"
             className="rounded-md bg-[#176B5B] px-4 py-2 text-[14px] font-medium text-white transition hover:bg-[#0F4D42]"
           >
-            Try Analyzer
+            Check My Resume
           </a>
         </div>
       </div>

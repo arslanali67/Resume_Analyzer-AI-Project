@@ -5,7 +5,6 @@ const navItems = [
   { id: "upload", label: "Upload" },
   { id: "jobs", label: "Jobs" },
   { id: "evaluate", label: "Evaluate" },
-  { id: "candidate-portal", label: "Candidate Portal" },
   { id: "candidates", label: "Candidates" },
   { id: "results", label: "Results" },
   { id: "compare", label: "Compare" },
