@@ -18,7 +18,7 @@ from app.services.job_description_service import (
     get_job_description_text,
 )
 from app.services.candidate_service import get_candidate_by_filename
-
+from app.services.job_service import generate_job_id
 
 
 router = APIRouter(
@@ -46,9 +46,12 @@ def evaluate_all(request: EvaluationRequest):
 
     resume_folder = "data/resumes"
 
+    job_id=request.job_id
+    
     results = evaluate_all_resumes(
         folder_path=resume_folder,
         job_description=job_description,
+        job_id=request.job_id,
     )
 
     export_to_excel(results)
@@ -155,39 +158,78 @@ def evaluate_single(
     filename: str,
     request: EvaluationRequest,
 ):
+    """
+    Evaluate a single candidate resume against a job description
+    and save the evaluation result.
+    """
+
+    # --------------------------------------------------
+    # Find candidate
+    # --------------------------------------------------
 
     metadata = get_candidate_by_filename(filename)
 
     if metadata is None:
-
         return {
             "error": "Candidate not found."
         }
+
+    # --------------------------------------------------
+    # Get candidate ID
+    # --------------------------------------------------
+
+    candidate_id = metadata.get("candidate_id")
+
+    if candidate_id is None:
+        return {
+            "error": "Candidate ID not found."
+        }
+
+    # --------------------------------------------------
+    # Get job description
+    # --------------------------------------------------
 
     job_description = get_job_description_text(
         request.job_id
     )
 
     if job_description is None:
-
         return {
             "error": "Job Description not found."
         }
+
+    # --------------------------------------------------
+    # Evaluate resume
+    # --------------------------------------------------
 
     evaluation = evaluate_resume(
         job_description=job_description,
         filename=filename,
     )
 
+    if evaluation is None:
+        return {
+            "error": "Resume evaluation failed."
+        }
+
+    # --------------------------------------------------
+    # Save evaluation
+    # --------------------------------------------------
+
     save_evaluation(
-        filename,
-        metadata,
-        evaluation,
+        candidate_id=candidate_id,
+        job_id=request.job_id,
+        evaluation=evaluation,
     )
+
+    # --------------------------------------------------
+    # Response
+    # --------------------------------------------------
 
     return {
         "filename": filename,
         "job_id": request.job_id,
+        "candidate_id": candidate_id,
         "metadata": metadata,
         "evaluation": evaluation.model_dump(),
     }

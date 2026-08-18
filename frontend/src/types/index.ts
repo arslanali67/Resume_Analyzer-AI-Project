@@ -149,6 +149,115 @@ export interface ZipUploadResponse {
   results: UploadResult[];
 }
 
+export interface CandidatePortalMetadata {
+  candidate_name?: string;
+  email?: string;
+  phone?: string;
+  location?: string;
+  education?: string;
+  current_role?: string;
+  experience_years?: number;
+  skills?: string[];
+  linkedin?: string;
+  github?: string;
+  summary?: string;
+}
+
+// ── ATS breakdown (app/schemas/ats_breakdown.py) ─────────
+
+export interface ATSCategory {
+  score: number;
+  reason: string;
+}
+
+export type ATSCategoryKey =
+  | "skills"
+  | "experience"
+  | "education"
+  | "projects"
+  | "keywords"
+  | "formatting";
+
+export type ATSBreakdown = Record<ATSCategoryKey, ATSCategory>;
+
+export type RecommendationValue = "Hire" | "Maybe" | "Reject";
+
+// ── Evaluation (app/schemas/evaluation_schema.py) ────────
+
+export interface CandidatePortalEvaluation {
+  match_score: number;
+  matching_skills: string[];
+  missing_skills: string[];
+  experience_summary: string;
+  strengths: string[];
+  weaknesses: string[];
+  recommendation: RecommendationValue;
+  recommendation_reason: string;
+  breakdown: ATSBreakdown;
+  overall_feedback: string[];
+  resume_strengths: string[];
+  resume_improvements: string[];
+  ats_grade: string;
+}
+
+// ── Rewritten resume (app/schemas/resume_rewrite_schema.py) ──
+
+export interface RewriteSkillCategory {
+  category: string;
+  skills: string[];
+}
+
+export interface RewriteExperienceItem {
+  company: string;
+  location: string;
+  role: string;
+  duration: string;
+  bullets: string[];
+}
+
+export interface RewriteProjectItem {
+  title: string;
+  technologies: string[];
+  date: string;
+  bullets: string[];
+}
+
+export interface RewriteEducationItem {
+  degree: string;
+  institute: string;
+  location: string;
+  duration: string;
+}
+
+export interface RewriteCertificationItem {
+  name: string;
+  url: string;
+}
+
+export interface RewrittenResume {
+  professional_summary: { content: string };
+  skills: RewriteSkillCategory[];
+  experience: RewriteExperienceItem[];
+  projects: RewriteProjectItem[];
+  education: RewriteEducationItem[];
+  certifications: RewriteCertificationItem[];
+  ats_keywords_used: string[];
+  improvement_suggestions: { recommendations: string[] };
+}
+
+export interface CandidatePortalPdf {
+  filename: string;
+  download_url: string;
+}
+
+export interface CandidatePortalResponse {
+  metadata: CandidatePortalMetadata;
+  evaluation: CandidatePortalEvaluation;
+  rewritten_resume: RewrittenResume | null;
+  /** Only present on /candidate/generate-pdf — /candidate/analyze omits it. */
+  pdf?: CandidatePortalPdf;
+}
+
 export interface TopSkill {
   skill: string;
   count: number;

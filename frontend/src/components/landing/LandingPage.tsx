@@ -14,16 +14,21 @@ import Footer from "./Footer";
 
 interface LandingPageProps {
   onOpenDashboard: () => void;
+  onOpenCandidatePortal: () => void;
   onAnalyzed: () => void;
 }
 
 export default function LandingPage({
   onOpenDashboard,
+  onOpenCandidatePortal,
   onAnalyzed,
 }: LandingPageProps) {
   return (
     <div className="min-h-screen bg-[#F8F8F6]">
-      <LandingNavbar onOpenDashboard={onOpenDashboard} />
+      <LandingNavbar
+        onOpenDashboard={onOpenDashboard}
+        onOpenCandidatePortal={onOpenCandidatePortal}
+      />
       <main>
         <HeroSection onOpenDashboard={onOpenDashboard} />
         <ProblemSection />
@@ -40,7 +45,10 @@ export default function LandingPage({
         <ReportsPreviewSection onOpenDashboard={onOpenDashboard} />
         <FinalCTASection onOpenDashboard={onOpenDashboard} />
       </main>
-      <Footer onOpenDashboard={onOpenDashboard} />
+      <Footer
+        onOpenDashboard={onOpenDashboard}
+        onOpenCandidatePortal={onOpenCandidatePortal}
+      />
     </div>
   );
 }

@@ -2,8 +2,9 @@ import { useCallback, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import LandingPage from "./components/landing/LandingPage";
 import DashboardPage from "./components/DashboardPage";
+import CandidatePortalPage from "./components/candidate/CandidatePortalPage";
 
-type View = "landing" | "dashboard";
+type View = "landing" | "dashboard" | "candidate";
 
 export default function App() {
   const [view, setView] = useState<View>("landing");
@@ -30,6 +31,11 @@ export default function App() {
     window.scrollTo(0, 0);
   }, []);
 
+  const openCandidatePortal = useCallback(() => {
+    setView("candidate");
+    window.scrollTo(0, 0);
+  }, []);
+
   const goHome = useCallback(() => {
     setView("landing");
     window.scrollTo(0, 0);
@@ -46,12 +52,18 @@ export default function App() {
           },
         }}
       />
-      {view === "landing" ? (
+
+      {view === "landing" && (
         <LandingPage
           onOpenDashboard={openDashboard}
+          onOpenCandidatePortal={openCandidatePortal}
           onAnalyzed={bumpResults}
         />
-      ) : (
+      )}
+
+      {view === "candidate" && <CandidatePortalPage onBackToHr={goHome} />}
+
+      {view === "dashboard" && (
         <DashboardPage
           refreshKeys={{
             candidates: candidatesRefreshKey,

@@ -1,8 +1,10 @@
-from app.services.comparison_service import compare_candidates
+from app.services.database import get_connection
 
-print(
-    compare_candidates(
-        "sample_resume.pdf",
-        "sample_resume1.pdf",
-    )
-)
+conn = get_connection()
+
+conn.execute("DROP TABLE evaluations")
+
+conn.commit()
+conn.close()
+
+print("Evaluations table deleted.")

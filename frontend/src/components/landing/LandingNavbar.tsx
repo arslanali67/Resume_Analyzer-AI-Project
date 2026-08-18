@@ -1,5 +1,6 @@
 interface LandingNavbarProps {
   onOpenDashboard: () => void;
+  onOpenCandidatePortal: () => void;
 }
 
 const navLinks = [
@@ -9,7 +10,10 @@ const navLinks = [
   { href: "#analyzer", label: "Analyze Resume" },
 ];
 
-export default function LandingNavbar({ onOpenDashboard }: LandingNavbarProps) {
+export default function LandingNavbar({
+  onOpenDashboard,
+  onOpenCandidatePortal,
+}: LandingNavbarProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-[#E6E6E2] bg-[#F8F8F6]/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5">
@@ -35,6 +39,13 @@ export default function LandingNavbar({ onOpenDashboard }: LandingNavbarProps) {
         </nav>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={onOpenCandidatePortal}
+            className="hidden rounded-md px-3 py-2 text-[14px] font-medium text-[#6B6B6B] transition hover:text-[#171717] md:inline-flex"
+          >
+            For Candidates
+          </button>
           <button
             type="button"
             onClick={onOpenDashboard}
